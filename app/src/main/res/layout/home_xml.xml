@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinate"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:descendantFocusability="blocksDescendants">
+
+    <RelativeLayout
+        android:id="@+id/parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/primary_dark"
+        android:orientation="vertical"
+        android:animateLayoutChanges="true"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+                <android.support.v7.widget.Toolbar
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/abc_action_bar_default_height_material"
+                    android:id="@+id/toolbar"
+                    android:theme="@style/Theme.AppCompat"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                    android:background="@color/primary"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:paddingTop="@dimen/toppadding" />
+
+                <RelativeLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/toolbar"
+                    android:animateLayoutChanges="true"
+                    android:id="@+id/relativeLayout">
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/bglayout"
+                        android:background="@color/primary"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:visibility="visible">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/timeTV"
+                            android:id="@+id/timeTV"
+                            android:layout_gravity="center"
+                            android:textColor="#FFF"
+                            android:textSize="56sp"
+                            android:fontFamily="sans-serif-light"
+                            android:textStyle="normal" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/statusTV"
+                            android:id="@+id/statusTV"
+                            android:textStyle="bold|normal"
+                            android:textSize="16sp"
+                            android:textColor="#FFF"
+                            android:layout_gravity="center_horizontal" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:orientation="horizontal"
+                            android:background="@color/transparent"
+                            android:layout_marginTop="8dp">
+                            <ImageButton
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/folder"
+                                android:layout_gravity="left|center_vertical"
+                                android:layout_weight="1"
+                                android:src="@drawable/ic_folder_white_24dp"
+                                android:background="@color/transparent" />
+                            <ImageButton
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/palette"
+                                android:layout_gravity="right|center_vertical"
+                                android:layout_weight="1"
+                                android:src="@drawable/ic_palette_white_24dp"
+                                android:background="@color/transparent"/>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <elcapps.elcasoundrecorder.FixedRecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible"
+                        android:id="@+id/recycler_view"
+                        android:layout_below="@+id/bglayout"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentBottom="true"
+                        />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="3dp"
+                        android:id="@+id/shadow_view"
+                        android:background="@drawable/shadow"
+                        android:visibility="visible"
+                        android:layout_below="@+id/bglayout"/>
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="64dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:id="@+id/bottombar"
+                    android:visibility="invisible"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@color/primary">
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:id="@+id/pause_btn"
+                        android:layout_weight="1"
+                        android:background="@color/primary_dark"
+                        android:layout_margin="0dp"
+                        android:src="@drawable/ic_pause_white_24dp" />
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:id="@+id/stop_btn"
+                        android:layout_weight="1"
+                        android:layout_margin="0dp"
+                        android:src="@drawable/ic_stop_white_24dp"
+                        android:scaleType="center"
+                        android:cropToPadding="false"
+                        android:background="@color/primary_dark" />
+                </LinearLayout>
+
+            </RelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/recbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_mic_white_24dp"
+        android:layout_gravity="end|bottom"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        app:borderWidth="0dp"
+        android:visibility="visible"
+        app:elevation="6dp"
+        app:backgroundTint="@color/accent"/>
+</android.support.design.widget.CoordinatorLayout>
