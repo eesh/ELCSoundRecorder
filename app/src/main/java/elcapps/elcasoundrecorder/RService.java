@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.os.Build;
 import android.os.Environment;
 import android.os.FileObserver;
 import android.os.IBinder;
@@ -97,12 +98,17 @@ public class RService extends Service {
             log(fileName);
             mediaRecorder = new MediaRecorder();
             mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-            mediaRecorder.setAudioSamplingRate(SAMPLE_RATE);
-            //mediaRecorder.setAudioChannels(1);
-            mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
-            mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-            mediaRecorder.setAudioEncodingBitRate(16);
+            mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+            if(Build.VERSION.SDK_INT >= 16) {
+                mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.HE_AAC);
+            } else {
+                mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+            }
             mediaRecorder.setOutputFile(fileName);
+            mediaRecorder.setAudioSamplingRate(SAMPLE_RATE);
+            mediaRecorder.setAudioEncodingBitRate(SAMPLE_RATE);
+            Log.e("samplerate", ""+SAMPLE_RATE);
+            //mediaRecorder.setAudioChannels(1);
             try {
                 mediaRecorder.prepare();
             } catch (IOException e) {

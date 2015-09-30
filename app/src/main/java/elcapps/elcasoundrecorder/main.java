@@ -593,8 +593,8 @@ public class main extends AppCompatActivity implements
                 color_primary_dark = getResources().getColor(R.color.orange_700) ;
                 break;
             case 3:
-                color_primary = getResources().getColor(R.color.yellow_500);
-                color_primary_dark = getResources().getColor(R.color.yellow_700) ;
+                color_primary = getResources().getColor(R.color.yellow_700);
+                color_primary_dark = getResources().getColor(R.color.yellow_800) ;
                 break;
             case 4:
                 color_primary = getResources().getColor(R.color.blue_500);
@@ -1438,7 +1438,7 @@ public class main extends AppCompatActivity implements
 -> Layout: add proper layout for tablets
 -> Android wear support for stealth recording (record from widget)
 
- */
+*/
 
 /*
 Changelog:
