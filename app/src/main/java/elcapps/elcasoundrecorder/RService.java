@@ -330,6 +330,7 @@ public class RService extends Service {
         appStart = false;
         if(mediaRecorder != null) {
             mediaRecorder.stop();
+            mediaRecorder.reset();
             mediaRecorder.release();
             mediaRecorder = null;
             sendBroadcast(new Intent("elcarecorder.refresh"));

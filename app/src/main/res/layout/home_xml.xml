@@ -2,6 +2,7 @@
 
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinate"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
@@ -11,7 +12,7 @@
         android:id="@+id/parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/primary_dark"
+        android:background="@color/cardview_light_background"
         android:orientation="vertical"
         android:animateLayoutChanges="true"
         xmlns:android="http://schemas.android.com/apk/res/android">
@@ -98,12 +99,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:visibility="visible"
+                        android:scrollbars="vertical"
                         android:id="@+id/recycler_view"
                         android:layout_below="@+id/bglayout"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentBottom="true"
-                        />
+                        android:background="@color/cardview_light_background"
+                        tools:listitem="@android:layout/simple_list_item_1"/>
+
 
                     <View
                         android:layout_width="match_parent"

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ELCA Sound Recorder</string>
+    <string name="app_name">Sound Recorder</string>
     <string name="lastclipid">1</string>
     <string name="banner_ad_unit_id">ca-app-pub-1351496792282856/2393614125</string>
     <string name="dhTV">Folders</string>
@@ -21,4 +21,8 @@
     <string name="menuitem_holdToRecord">Hold to record</string>
     <string name="menuitem_qualitySettings">Quality settings</string>
     <string name="textview_stop">Stop</string>
+    <string name="title_activity_feedback">FeedbackActivity</string>
+    <string name="text_feedback">Feedback</string>
+    <string name="text_feedback_detail">Tell us what you liked and disliked or why you may be uninstalling the application so we can make it better</string>
+    <string name="text_feedback_hint">Type here</string>
 </resources>

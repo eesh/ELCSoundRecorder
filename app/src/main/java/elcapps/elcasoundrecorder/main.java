@@ -33,7 +33,6 @@ import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -151,6 +150,8 @@ public class main extends AppCompatActivity implements
         if(!fDir.exists()) {
             try {
                 fDir.mkdirs();
+                File nomedia = new File(fDir.getAbsolutePath()+"/.nomedia");
+                nomedia.createNewFile();
             } catch (Exception e){
                 log(e.toString());
             }
@@ -212,6 +213,9 @@ public class main extends AppCompatActivity implements
             }
         } else if( itemid == R.id.menuitem_qualitySettings) {
             qualitySettingsDialog.show();
+        } else if (itemid == R.id.menuitem_feedback) {
+            Intent intent = new Intent(this, FeedbackActivity.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -537,12 +541,12 @@ public class main extends AppCompatActivity implements
 
     private void setLayoutColors() {
         bottombar.setBackgroundColor(color_primary_dark);
-        parent_view.setBackgroundColor(color_primary);
+        //parent_view.setBackgroundColor(color_primary);
         toolbar.setBackgroundColor(color_primary);
         bglayout.setBackgroundColor(color_primary);
         pausebtn.setBackgroundColor(color_primary_dark);
         stopbtn.setBackgroundColor(color_primary_dark);
-        recyclerView.setBackgroundColor(color_primary);
+        //recyclerView.setBackgroundColor(color_primary);
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(color_primary_dark);
             Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
@@ -933,8 +937,25 @@ public class main extends AppCompatActivity implements
         }
     }
 
+    public String timerText(int duration) {
+        int minutes = duration/60;
+        int seconds = duration-(minutes*60);
+        String time = "";
+        if(minutes < 10) {
+            time += "0";
+        }
+        time += minutes;
+        time += ":";
+        if(seconds < 10) {
+            time += "0";
+        }
+        time += seconds;
+        return time;
+    }
+
     private void playRecording(String source) {
         final Slider slider = gHolder.slider;
+        final TextView timer = gHolder.textView_timer;
         mPlayer = new MediaPlayer();
         try {
             mPlayer.setDataSource(source);
@@ -951,25 +972,33 @@ public class main extends AppCompatActivity implements
         }
         mPlayer.start();
         if(slider != null) {
-            slider.setValueRange(0, mPlayer.getDuration()/1000, true);
+            slider.setValueRange(0, (mPlayer.getDuration() / 1000), true);
+            slider.setValue(0, true);
         }
+
+        final Runnable updateSlider = new Runnable() {
+
+            MediaPlayer current = mPlayer;
+            @Override
+            public void run() {
+                if(mPlayer == null || current != mPlayer) {
+                    Thread.currentThread().interrupt();
+                } else {
+                    if(sliderVisible) {
+                        assert slider != null;
+                        slider.setValue((mPlayer.getCurrentPosition() / 1000), true);
+                        timer.setText(timerText(mPlayer.getCurrentPosition()/1000));
+                    }
+                }
+            }
+        };
+
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 while(!Thread.currentThread().isInterrupted()) {
                     if (slider != null && mPlayer != null && !Thread.currentThread().isInterrupted()) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if(mPlayer == null) {
-                                    Thread.currentThread().interrupt();
-                                } else {
-                                    if(sliderVisible) {
-                                        slider.setValue(mPlayer.getCurrentPosition() / 1000, true);
-                                    }
-                                }
-                            }
-                        });
+                        runOnUiThread(updateSlider);
                     }
                     try {
                         Thread.sleep(1000);
@@ -979,16 +1008,18 @@ public class main extends AppCompatActivity implements
                 }
             }
         };
-        final Thread thread = new Thread(runnable);
+        Thread thread = new Thread(runnable);
         thread.start();
         try {
             assert slider != null;
             slider.setOnPositionChangeListener(new Slider.OnPositionChangeListener() {
                 @Override
                 public void onPositionChanged(Slider slider, boolean b, float v, float v1, int i, int i1) {
-                    if (thread.isAlive() && b) {
-                        mPlayer.seekTo(i1);
+                    if (b) {
+                        mPlayer.seekTo(i1*1000);
+                        slider.setValue(i1, true);
                     }
+
                 }
             });
         } catch (Exception ignored) {
@@ -998,7 +1029,7 @@ public class main extends AppCompatActivity implements
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
                 if(mPlayer != null) {
-                    thread.interrupt();
+                    //Thread.currentThread().interrupt();
                     stopPlaying();
                 }
                 sessionid = -1;
@@ -1044,11 +1075,11 @@ public class main extends AppCompatActivity implements
                     Date d = new Date(path.lastModified());
                     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                     date = formatter.format(d);
-                    formatter = new SimpleDateFormat("h:m a", Locale.getDefault());
+                    formatter = new SimpleDateFormat("h:mm a", Locale.getDefault());
                     time = formatter.format(d);
                 } else {
                     date = metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DATE);
-                    SimpleDateFormat formatter = new SimpleDateFormat("h:m a", Locale.getDefault());
+                    SimpleDateFormat formatter = new SimpleDateFormat("h:mm a", Locale.getDefault());
                     time = formatter.format(path.lastModified());
                 }
                 RecordedFile file = new RecordedFile(fname, duration, date, time, path.getAbsolutePath());
@@ -1103,6 +1134,9 @@ public class main extends AppCompatActivity implements
             if(sessionid != position) {
                 if(mPlayer != null) {
                     stopPlaying();
+                    if(gHolder != null) {
+                        toggleSliderVisibility(false, gHolder);
+                    }
                     sessionid = -1;
                 }
                 gHolder = viewHolder;
@@ -1157,7 +1191,7 @@ public class main extends AppCompatActivity implements
         @Override
         public void onBindViewHolder(final ViewHolder viewHolder, int i) {
             RecordedFile recording = recordings.get(i);
-            viewHolder.fnTV.setText(""+recording.filename);
+            viewHolder.fnTV.setText(recording.filename);
             viewHolder.lTV.setText(recording.duration);
             viewHolder.dTV.setText(recording.date);
             viewHolder.tTV.setText(recording.time);
@@ -1169,6 +1203,9 @@ public class main extends AppCompatActivity implements
                 }
             });
             toggleSliderVisibility(false, viewHolder);
+            if(i == sessionid && i != -1) {
+                toggleSliderVisibility(true, viewHolder);
+            }
         }
 
         @Override
@@ -1182,7 +1219,7 @@ public class main extends AppCompatActivity implements
             TextView dTV;
             TextView lTV;
             TextView tTV;
-            CardView cardView;
+            TextView textView_timer;
             Slider slider;
             TextView stopView;
 
@@ -1193,8 +1230,8 @@ public class main extends AppCompatActivity implements
                 lTV = (TextView) itemView.findViewById(R.id.lLVTV);
                 tTV = (TextView) itemView.findViewById(R.id.tLVTV);
                 slider = (Slider) itemView.findViewById(R.id.slider);
-                cardView = (CardView) itemView.findViewById(R.id.card_view);
                 stopView = (TextView) itemView.findViewById(R.id.stop_playback);
+                textView_timer = (TextView) itemView.findViewById(R.id.textView_timer);
             }
         }
     }
@@ -1208,9 +1245,9 @@ public class main extends AppCompatActivity implements
 
         @Override
         public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            outRect.bottom = space;
-            outRect.left = space*2;
-            outRect.right = space*2;
+            //outRect.bottom = space;
+            //outRect.left = space*2;
+            //outRect.right = space*2;
             if(parent.getChildAdapterPosition(view) == 0)
                 outRect.top = space * 2;
         }
@@ -1236,7 +1273,7 @@ public class main extends AppCompatActivity implements
             if(type == 1) {  // App resumed
                 recyclerAdapter.notifyDataSetChanged();
             } else if(type == 2) { // Recording added via refresh
-                recyclerAdapter.notifyItemInserted(recyclerAdapter.getItemCount());
+                recyclerAdapter.notifyDataSetChanged();
             } else if(type == 3) { // Recordings added on app start
                 //recyclerAdapter.notifyItemRangeInserted(0, recordings.size());
             }
@@ -1249,6 +1286,7 @@ public class main extends AppCompatActivity implements
             sliderVisible = false;
             holder.slider.setVisibility(View.GONE);
             holder.stopView.setVisibility(View.GONE);
+            holder.textView_timer.setVisibility(View.GONE);
             holder.fnTV.setVisibility(View.VISIBLE);
             holder.lTV.setVisibility(View.VISIBLE);
             holder.dTV.setVisibility(View.VISIBLE);
@@ -1261,6 +1299,7 @@ public class main extends AppCompatActivity implements
             holder.tTV.setVisibility(View.GONE);
             holder.stopView.setVisibility(View.VISIBLE);
             holder.slider.setVisibility(View.VISIBLE);
+            holder.textView_timer.setVisibility(View.VISIBLE);
         }
     }
 
@@ -1388,8 +1427,6 @@ public class main extends AppCompatActivity implements
 
 /* --------- TO DO -----------
 
-
--> Material: implement shrink on touch listitem and expand onlongclick listitem
 -> Layout: add proper layout for tablets
 -> Android wear support for stealth recording (record from widget)
 
