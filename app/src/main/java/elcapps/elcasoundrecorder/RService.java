@@ -283,7 +283,7 @@ public class RService extends Service {
         SharedPreferences pref = getSharedPreferences("recordingPrefs", Context.MODE_PRIVATE);
         String defaultPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/ELCArecorder/";
         folderPath = pref.getString(getString(R.string.folderPath), defaultPath);
-        recordingMode = 1;//pref.getInt(getString(R.string.mode), 2);
+        recordingMode = pref.getInt(getString(R.string.mode), 2);
         fileNumber = pref.getInt(getString(R.string.lastclipid),0);
         fileNumber++;
         File file = new File(getFolderPath() + "recording " + fileNumber + ".wav");

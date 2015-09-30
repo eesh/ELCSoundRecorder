@@ -238,7 +238,7 @@ public class main extends AppCompatActivity implements
 
     public boolean onContextItemSelected(MenuItem item) {
         final int position = recyclerAdapter.getContextPosition();
-        Log.e("ELCA","position: " + position);
+        Log.e("ELCA", "position: " + position);
         File file = new File(recordings.get(position).path);
         final File f = file;
         switch (item.getItemId()) {
@@ -572,7 +572,7 @@ public class main extends AppCompatActivity implements
             color_primary_dark = pref.getInt("color_primary_dark",getResources().getColor(R.color.primary_dark));
             mFileName = getFolder();
             folderPath = mFileName;
-            log("Number: "+ pref.getInt(getString(R.string.lastclipid),0));
+            log("Number: " + pref.getInt(getString(R.string.lastclipid), 0));
         }
     }
 
@@ -661,28 +661,23 @@ public class main extends AppCompatActivity implements
         editor.apply();
     }
 
+    private void setFormat(int format) {
+        if(format == 1) {
+            recordingMode = 1;
+        } else {
+            recordingMode = 2;
+        }
+        pref = getSharedPreferences("recordingPrefs",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putInt(getString(R.string.mode), recordingMode);
+        editor.apply();
+    }
+
     private void initializeDialogs() {
         qualitySettingsDialog = QualitySettings();
     }
 
     private void setButtons() {
-
-        class TempVariables {
-            int freq, format;
-            private void setfreq(int frequ) {
-                freq = frequ;
-            }
-
-            private void setFormat(int frequ) {
-                format = frequ;
-            }
-
-            private int getfreq() {
-                return freq;
-            }
-        }
-
-        final TempVariables temp = new TempVariables();
 
         spinner_item_listener = new Spinner.OnItemSelectedListener() {
             int count = 0;
@@ -695,7 +690,7 @@ public class main extends AppCompatActivity implements
                     }
                     if (adapterView.getId() == R.id.spinner_format) {
                         log("adapter: " + i);
-                        temp.setFormat(i);
+                        setFormat(i);
                     }
                 }
             }
@@ -1420,13 +1415,12 @@ public class main extends AppCompatActivity implements
         spinner = (Spinner) view.findViewById(R.id.spinner_format);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(spinner_item_listener);
-        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("CLOSE", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
             }
         });
-        builder.setPositiveButton("SAVE", dialog_click_listener);
         return builder.create();
     }
 }
