@@ -1050,10 +1050,18 @@ public class main extends AppCompatActivity implements
         recordings.clear();
         File dir = new File(getFolderPath());
         File paths[] = dir.listFiles();
+        File nomedia = new File(getFolderPath()+"/.nomedia");
+        if(!nomedia.exists()) {
+            try {
+                nomedia.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         int position = -1;
         if(paths != null) {
             for (File path : paths) {
-                if(getFileExt(path.getAbsolutePath()).equalsIgnoreCase("pcm")) continue;
+                if(getFileExt(path.getAbsolutePath()).equalsIgnoreCase("pcm") || getFileExt(path.getAbsolutePath()).equalsIgnoreCase("nomedia")) continue;
                 MediaMetadataRetriever metaRetriever = new MediaMetadataRetriever();
                 FileInputStream fileInputStream = null;
                 try {
