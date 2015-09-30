@@ -3,8 +3,8 @@
     android:padding="@dimen/widget_margin" android:background="@color/transparent">
 
     <ImageButton
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/button_Record"
         android:src="@drawable/ic_launcher"
         android:layout_centerInParent="true"
