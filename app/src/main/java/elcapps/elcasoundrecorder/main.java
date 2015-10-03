@@ -140,7 +140,7 @@ public class main extends AppCompatActivity implements
 
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            bglayout.setElevation(10);
+            bglayout.setElevation(12);
         } else {
             View view = findViewById(R.id.shadow_view);
             view.setVisibility(View.VISIBLE);
@@ -309,8 +309,10 @@ public class main extends AppCompatActivity implements
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setContentTitle("ELCA Sound Recorder");
         builder.setSmallIcon(R.drawable.notification);
-        builder.setContentText("Recording audio");
-        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, new Intent(getApplicationContext(), main.class), 0);
+        builder.setContentText("Tap to stop recording");
+        Intent intent = new Intent(getApplicationContext(), main.class);
+        intent.putExtra("fromNotification", true);
+        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, intent, 0);
         builder.setContentIntent(contentIntent);
         Notification notification = builder.build();
         notification.flags = Notification.FLAG_ONGOING_EVENT;
@@ -322,17 +324,21 @@ public class main extends AppCompatActivity implements
         receiver = new Receiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction("elcarecorder.refresh");
-        registerReceiver(receiver,filter);
+        registerReceiver(receiver, filter);
         int filenumber;
-        pref = getSharedPreferences("recordingPrefs",Context.MODE_PRIVATE);
+        pref = getSharedPreferences("recordingPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.apply();
+        editor.putBoolean("recording", true);
         filenumber = pref.getInt(getString(R.string.lastclipid), 0);
         filenumber++;
 
         mFileName = getFolderPath();
         if(recordingMode == 1) {
-            mFileName += "/ELCArecorder/recording " + filenumber + ".3gp";
+            mFileName += "/ELCArecorder/recording " + filenumber + ".m4a";
+            pausebtn.setEnabled(false);
         } else {
-            mFileName += "/ELCArecorder/recording " + filenumber + ".pcm";
+            mFileName += "/ELCArecorder/recording " + filenumber + ".wav";
         }
         startService(new Intent(this, RService.class));
         t = new Thread() {
@@ -380,6 +386,10 @@ public class main extends AppCompatActivity implements
     }
 
     private void stopRecording() {
+        pref = getSharedPreferences("recordingPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean("recording", false);
+        editor.apply();
         sendBroadcast(new Intent("elcarecorder.stop"));
         seconds = 0;
         minutes = 0;
@@ -419,6 +429,10 @@ public class main extends AppCompatActivity implements
                 }
                 intent.putExtra("fromWidget",false);
                 setIntent(intent);
+            } else if(intent.getBooleanExtra("fromNotification", false) == true){
+                if(recording) {
+                    stopButtonPress();
+                }
             }
         }
         else {
@@ -729,7 +743,9 @@ public class main extends AppCompatActivity implements
                         FAButton.setEnabled(false);
 
                         bottombar.setVisibility(View.VISIBLE);
-                        pausebtn.setEnabled(true);
+                        if(recordingMode == 2) {
+                            pausebtn.setEnabled(true);
+                        }
                         stopbtn.setEnabled(true);
                         ObjectAnimator anima = ObjectAnimator.ofFloat(bottombar,"translationY",parent_view.getY()+bottombar.getHeight(),parent_view.getY());
                         anima.setInterpolator(new FastOutLinearInInterpolator());
@@ -1056,7 +1072,7 @@ public class main extends AppCompatActivity implements
         int position = -1;
         if(paths != null) {
             for (File path : paths) {
-                if(getFileExt(path.getAbsolutePath()).equalsIgnoreCase("pcm") || getFileExt(path.getAbsolutePath()).equalsIgnoreCase("nomedia")) continue;
+                if(!getFileExt(path.getAbsolutePath()).equalsIgnoreCase("wav") && !getFileExt(path.getAbsolutePath()).equalsIgnoreCase("m4a")) continue;
                 MediaMetadataRetriever metaRetriever = new MediaMetadataRetriever();
                 FileInputStream fileInputStream = null;
                 try {
@@ -1337,7 +1353,11 @@ public class main extends AppCompatActivity implements
         FAButton.setEnabled(false);
 
         bottombar.setVisibility(View.VISIBLE);
-        pausebtn.setEnabled(true);
+        if(recordingMode ==2 ) {
+            pausebtn.setEnabled(true);
+        } else {
+            pausebtn.setEnabled(false);
+        }
         stopbtn.setEnabled(true);
         ObjectAnimator anima = ObjectAnimator.ofFloat(bottombar,"translationY",parent_view.getY()+bottombar.getHeight(),parent_view.getY());
         anima.setInterpolator(new FastOutLinearInInterpolator());
@@ -1422,6 +1442,62 @@ public class main extends AppCompatActivity implements
             }
         });
         return builder.create();
+    }
+
+    public void stopButtonPress() {
+        recording = false;
+        pausebtn = (ImageButton) findViewById(R.id.pause_btn);
+        stopbtn = (ImageButton) findViewById(R.id.stop_btn);
+        FAButton = (FloatingActionButton) findViewById(R.id.recbutton);
+        bottombar = (LinearLayout) (findViewById(R.id.bottombar));
+
+        if(paused) {
+            paused = false;
+            pausebtn.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_white_24dp));
+        }
+        stopRecording();
+        stopNotification();
+        ObjectAnimator sanim = ObjectAnimator.ofFloat(bottombar, "translationY", parent_view.getY(), parent_view.getY()+bottombar.getHeight());
+        sanim.setInterpolator(new FastOutLinearInInterpolator());
+        sanim.setDuration(250);
+        sanim.start();
+        sanim.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                bottombar.setVisibility(View.INVISIBLE);
+                pausebtn.setEnabled(false);
+                stopbtn.setEnabled(false);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+
+        Animation anim = growIn();
+        FAButton.setVisibility(View.VISIBLE);
+        FAButton.setEnabled(true);
+        anim.setStartOffset(300);
+        anim.setDuration(200);
+        anim.setFillEnabled(false);
+        anim.setFillAfter(false);
+        FAButton.startAnimation(anim);
+        holdRecording = false;
+        log("STOPbtn pressed");
+        if (holdToRecord) {
+            setButtons();
+        }
     }
 }
 

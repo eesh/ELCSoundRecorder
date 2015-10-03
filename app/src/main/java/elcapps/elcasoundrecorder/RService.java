@@ -106,7 +106,7 @@ public class RService extends Service {
             }
             mediaRecorder.setOutputFile(fileName);
             mediaRecorder.setAudioSamplingRate(SAMPLE_RATE);
-            mediaRecorder.setAudioEncodingBitRate(SAMPLE_RATE);
+            mediaRecorder.setAudioEncodingBitRate(96000);
             Log.e("samplerate", ""+SAMPLE_RATE);
             //mediaRecorder.setAudioChannels(1);
             try {
