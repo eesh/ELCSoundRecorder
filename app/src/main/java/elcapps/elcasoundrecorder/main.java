@@ -393,7 +393,9 @@ public class main extends AppCompatActivity implements
         sendBroadcast(new Intent("elcarecorder.stop"));
         seconds = 0;
         minutes = 0;
-        t.interrupt();
+        if(t != null) {
+            t.interrupt();
+        }
         timer.setText("00:00");
         statusTV.setText("Recording stopped");
     }
@@ -417,6 +419,7 @@ public class main extends AppCompatActivity implements
 
     @Override
     public void onResume() {
+        log("Resume");
         setActive(true);
         super.onResume();
         Intent intent = this.getIntent();
@@ -429,13 +432,22 @@ public class main extends AppCompatActivity implements
                 }
                 intent.putExtra("fromWidget",false);
                 setIntent(intent);
-            } else if(intent.getBooleanExtra("fromNotification", false) == true){
+            } else if(intent.getBooleanExtra("fromNotification", false)){
                 if(recording) {
                     stopButtonPress();
                 }
             }
+            if(!recording) {
+                updateFiles(1);
+            }
+            if (isMyServiceRunning(RService.class)) {
+                showRecordLayout();
+            }
         }
         else {
+            if (isMyServiceRunning(RService.class)) {
+                showRecordLayout();
+            }
             if(!recording) {
                 updateFiles(1);
             }
@@ -512,7 +524,20 @@ public class main extends AppCompatActivity implements
 
     public boolean getActive() {
         SharedPreferences pref = getSharedPreferences("recordingPrefs", Context.MODE_PRIVATE);
-        return pref.getBoolean(getString(R.string.activitystatus),true);
+        return pref.getBoolean(getString(R.string.activitystatus), true);
+    }
+
+    public int getFrequencyFromPref() {
+        SharedPreferences pref = getSharedPreferences("recordingPrefs", Context.MODE_PRIVATE);
+        return pref.getInt(getString(R.string.frequency), 44100);
+    }
+
+    public int getFrequency() {
+        return frequency;
+    }
+
+    public int getRecordingMode() {
+        return recordingMode;
     }
 
     public void pauserecording() {
@@ -697,14 +722,22 @@ public class main extends AppCompatActivity implements
             int count = 0;
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                count++;
-                if(count > 2) {
-                    if (adapterView.getId() == R.id.spinner_frequency) {
+                int frequency = getFrequency();
+                int recordingM = getRecordingMode();
+                if (adapterView.getId() == R.id.spinner_frequency) {
+                    int sFrequency = Integer.parseInt(adapterView.getAdapter().getItem(i).toString());
+                    if(sFrequency != frequency) {
                         setFrequency(Integer.parseInt(adapterView.getAdapter().getItem(i).toString()));
+                        log("test" + i);
                     }
-                    if (adapterView.getId() == R.id.spinner_format) {
-                        log("adapter: " + i);
+                }
+                if (adapterView.getId() == R.id.spinner_format) {
+                    if(i == 0 && recordingM == 1) {
                         setFormat(i);
+                        log("test" + i);
+                    } else if (i == 1 && recordingM == 2) {
+                        setFormat(i);
+                        log("test"+i);
                     }
                 }
             }
@@ -1337,6 +1370,55 @@ public class main extends AppCompatActivity implements
         return folderPath;
     }
 
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void showRecordLayout() {
+        //recording = isMyServiceRunning(RService.class);
+        if(!recording) {
+            recording = true;
+            pausebtn = (ImageButton) findViewById(R.id.pause_btn);
+            stopbtn = (ImageButton) findViewById(R.id.stop_btn);
+            FAButton = (FloatingActionButton) findViewById(R.id.recbutton);
+            bottombar = (LinearLayout) (findViewById(R.id.bottombar));
+
+            Animation anim = shrinkOut();
+            anim.setFillEnabled(false);
+            anim.setFillAfter(false);
+            FAButton.startAnimation(anim);
+            FAButton.setVisibility(View.GONE);
+            FAButton.setEnabled(false);
+
+            bottombar.setVisibility(View.VISIBLE);
+            if (recordingMode == 2) {
+                pausebtn.setEnabled(true);
+            } else {
+                pausebtn.setEnabled(false);
+            }
+            stopbtn.setEnabled(true);
+            ObjectAnimator anima = ObjectAnimator.ofFloat(bottombar, "translationY", parent_view.getY() + bottombar.getHeight(), parent_view.getY());
+            anima.setInterpolator(new FastOutLinearInInterpolator());
+            anima.setDuration(250);
+            anima.setStartDelay(250);
+            anima.start();
+            createNotification(getApplicationContext());
+            if(receiver == null) {
+                receiver = new Receiver();
+                IntentFilter filter = new IntentFilter();
+                filter.addAction("elcarecorder.refresh");
+                registerReceiver(receiver, filter);
+            }
+            log("Recording due to Intent");
+        }
+    }
+
     private void recordFromWidget() {
         recording = true;
         startRecording();
@@ -1381,7 +1463,7 @@ public class main extends AppCompatActivity implements
         }
         stopRecording();
         stopNotification();
-        ObjectAnimator sanim = ObjectAnimator.ofFloat(bottombar, "translationY", parent_view.getY(), parent_view.getY()+bottombar.getHeight());
+        ObjectAnimator sanim = ObjectAnimator.ofFloat(bottombar, "translationY", parent_view.getY(), parent_view.getY() + bottombar.getHeight());
         sanim.setInterpolator(new FastOutLinearInInterpolator());
         sanim.setDuration(250);
         sanim.start();
@@ -1430,10 +1512,14 @@ public class main extends AppCompatActivity implements
         Spinner spinner = (Spinner) view.findViewById(R.id.spinner_frequency);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(spinner_item_listener);
+        spinner.setSelection(adapter.getPosition(Integer.toString(frequency)));
         adapter = ArrayAdapter.createFromResource(main.this, R.array.format_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner = (Spinner) view.findViewById(R.id.spinner_format);
         spinner.setAdapter(adapter);
+        if(recordingMode == 1) {
+            spinner.setSelection(1);
+        } else spinner.setSelection(0);
         spinner.setOnItemSelectedListener(spinner_item_listener);
         builder.setNegativeButton("CLOSE", new DialogInterface.OnClickListener() {
             @Override
