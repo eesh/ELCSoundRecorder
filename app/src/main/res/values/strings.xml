@@ -28,6 +28,7 @@
     <string name="title_quality_settings">Quality Settings</string>
 
     <string name="button_quality_settings_close">CLOSE</string>
+    <string name="text_feedback_prompt">Hey! If you plan on uninstalling or have suggestions, please let us know why or what they are using the Feedback option in the menu :)</string>
 
     <!-- Do not edit these lines -->
     <string name="dhTV">Folders</string>

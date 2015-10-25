@@ -1584,7 +1584,7 @@ public class main extends AppCompatActivity implements
         AlertDialog dialog = new AlertDialog.Builder(main.this, R.style.Theme_AppCompat_Light_Dialog_Alert)
                 .setPositiveButton("OKAY", null)
                 .create();
-        dialog.setMessage("Hey! If you plan on uninstalling or have suggestions, please let us know why or what they are using the Feedback option in the menu :)");
+        dialog.setMessage(getString(R.string.text_feedback_prompt));
         dialog.show();
     }
 
