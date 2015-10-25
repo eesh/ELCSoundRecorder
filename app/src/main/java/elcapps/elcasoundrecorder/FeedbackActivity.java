@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -38,6 +39,7 @@ public class FeedbackActivity extends AppCompatActivity implements FloatingActio
     @Override
     public void onClick(View view) {
         final String feedback = textbox.getText().toString();
+        view.setEnabled(false);
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         StringRequest request = new StringRequest(Request.Method.POST, "http://filtershots.com/SoundRecorder/feedback.php",
                 new Response.Listener<String>() {
@@ -49,6 +51,7 @@ public class FeedbackActivity extends AppCompatActivity implements FloatingActio
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("Volley", error.toString());
+                finish();
             }
         }) {
             @Override
@@ -58,6 +61,7 @@ public class FeedbackActivity extends AppCompatActivity implements FloatingActio
                 return map;
             }
         };
+        Toast.makeText(getApplicationContext(),"Sending feedback", Toast.LENGTH_LONG).show();
         requestQueue.add(request);
     }
 }

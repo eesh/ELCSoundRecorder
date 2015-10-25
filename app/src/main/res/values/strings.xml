@@ -1,16 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Sound Recorder</string>
-    <string name="lastclipid">1</string>
-    <string name="banner_ad_unit_id">ca-app-pub-1351496792282856/2393614125</string>
+
+    <string name="rename_menu_string">Rename</string>
+    <string name="dialog_title">Rename file</string>
+    <string name="dialog_boxname">Name</string>
+    <string name="delete_menu_string">Delete</string>
+    <string name="notify_recording_deleted">Recording deleted</string>
+    <string name="share_menu_string">Share</string>
+
+    <string name="menuitem_holdToRecord">Hold to record</string>
+    <string name="menuitem_qualitySettings">Quality settings</string>
+    <string name="textview_stop">Stop</string>
+
+
+    <string name="title_activity_feedback">FeedbackActivity</string>
+    <string name="text_feedback">Feedback</string>
+    <string name="text_feedback_detail">Tell us what you liked and disliked or why you may be uninstalling the application so we can make it better</string>
+    <string name="text_feedback_hint">Type here</string>
+
+    <string name="notification_content_text">Tap to stop recording</string>
+
+    <string name="text_recording_started">Recording started</string>
+    <string name="text_recording_stopped">Recording stopped</string>
+    <string name="text_recording_paused">Recording paused</string>
+    <string name="text_playback_started">Playback stared</string>
+    <string name="text_playback_stopped">Playback stopped</string>
+    <string name="title_quality_settings">Quality Settings</string>
+
+    <string name="button_quality_settings_close">CLOSE</string>
+
+    <!-- Do not edit these lines -->
     <string name="dhTV">Folders</string>
     <string name="timeTV">00:00</string>
     <string name="statusTV">Not Recording</string>
-    <string name="rename_menu_string">Rename</string>
-    <string name="delete_menu_string">Delete</string>
-    <string name="share_menu_string">Share</string>
-    <string name="dialog_title">Rename file</string>
-    <string name="dialog_boxname">Name</string>
+    <string name="app_name">Sound Recorder</string>
+    <string name="lastclipid">1</string>
     <string name="mode">Recording mode</string>
     <string name="activitystatus">activityrunning</string>
     <string name="frequency">frequency</string>
@@ -19,11 +43,6 @@
     <string name="folderPath">folderPath</string>
     <string name="appwidget_text">Record</string>
     <string name="add_widget">Add widget</string>
-    <string name="menuitem_holdToRecord">Hold to record</string>
-    <string name="menuitem_qualitySettings">Quality settings</string>
-    <string name="textview_stop">Stop</string>
-    <string name="title_activity_feedback">FeedbackActivity</string>
-    <string name="text_feedback">Feedback</string>
-    <string name="text_feedback_detail">Tell us what you liked and disliked or why you may be uninstalling the application so we can make it better</string>
-    <string name="text_feedback_hint">Type here</string>
+
+
 </resources>

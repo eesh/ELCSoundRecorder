@@ -1,7 +1,9 @@
 package elcapps.elcasoundrecorder;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.Dialog;
 import android.app.Notification;
@@ -13,6 +15,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -90,7 +93,9 @@ public class main extends AppCompatActivity implements
     private int minutes = 0;
     private int sessionid=-1;
     private int recordingMode = 2;
+    private int recordingid = 0;
     private int frequency = 44100;
+    private int deletePosition = -1;
 
     private ImageButton pausebtn;
     private ImageButton stopbtn;
@@ -125,6 +130,7 @@ public class main extends AppCompatActivity implements
     private SharedPreferences pref;
     private DirectoryChooserFragment mDialogFragment;
     private AlertDialog qualitySettingsDialog;
+    private File deleteFile = null;
 
 
     @Override
@@ -137,13 +143,21 @@ public class main extends AppCompatActivity implements
         setLayoutColors(); // Dynamic theme engine
         setSupportActionBar(toolbar);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             bglayout.setElevation(12);
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                checkApplicationPermissions();
+            } else {
+                if(recordingid == 0) {
+                    showFeedbackDialog();
+                }
+            }
         } else {
             View view = findViewById(R.id.shadow_view);
             view.setVisibility(View.VISIBLE);
+            if(recordingid == 0) {
+                showFeedbackDialog();
+            }
         }
 
         File fDir = new File(mFileName);
@@ -158,7 +172,6 @@ public class main extends AppCompatActivity implements
         }
         setButtons();
         initializeDialogs();
-
         // --- RECYCLER VIEW INITIALIZE ---
         float mDensity = getResources().getDisplayMetrics().density;
         int space = (int) (4 * mDensity + 0.5f);
@@ -175,6 +188,8 @@ public class main extends AppCompatActivity implements
 
         // --- INITIALIZE FILE ARRAY ---
         updateFiles(1);
+
+
     }
 
 
@@ -277,16 +292,30 @@ public class main extends AppCompatActivity implements
 
                 dialog.show();
                 return true;
-            case R.id.delete_menu:
-                if(sessionid == position) {
+            case R.id.delete_menu: {
+                if (sessionid == position) {
                     stopPlaying();
                     sessionid = -1;
                 }
-                recordings.remove(position);
-                recyclerAdapter.notifyItemRemoved(position);
-                file.delete();
-                Snackbar.make(parent_view, "Recording deleted", Snackbar.LENGTH_SHORT).show();
+                prepareDelete(position, file);
+                AlertDialog deleteAlert = new AlertDialog.Builder(main.this, R.style.Theme_AppCompat_Light_Dialog_Alert)
+                        .setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                deleteRecording();
+                            }
+                        })
+                        .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                resetDelete();
+                            }
+                        })
+                        .create();
+                deleteAlert.setMessage("Delete recording?");
+                deleteAlert.show();
                 return true;
+            }
             case R.id.share_menu:
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
@@ -299,6 +328,24 @@ public class main extends AppCompatActivity implements
         }
     }
 
+    public void prepareDelete(int position, File file) {
+        deletePosition = position;
+        deleteFile = file;
+    }
+
+    public void resetDelete() {
+        deleteFile = null;
+        deletePosition = -1;
+    }
+
+    public void deleteRecording() {
+        if (deletePosition == -1) return;
+        recordings.remove(deletePosition);
+        recyclerAdapter.notifyItemRemoved(deletePosition);
+        deleteFile.delete();
+        Snackbar.make(parent_view, getString(R.string.notify_recording_deleted), Snackbar.LENGTH_SHORT).show();
+        resetDelete();
+    }
 
     public void stopNotification() {
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -307,9 +354,9 @@ public class main extends AppCompatActivity implements
 
     public void createNotification(Context context) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-        builder.setContentTitle("ELCA Sound Recorder");
+        builder.setContentTitle("Sound Recorder by ELC");
         builder.setSmallIcon(R.drawable.notification);
-        builder.setContentText("Tap to stop recording");
+        builder.setContentText(getString(R.string.notification_content_text));
         Intent intent = new Intent(getApplicationContext(), main.class);
         intent.putExtra("fromNotification", true);
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0, intent, 0);
@@ -366,7 +413,7 @@ public class main extends AppCompatActivity implements
         };
 
         t.start();
-        statusTV.setText("Recording started");
+        statusTV.setText(R.string.text_recording_started);
     }
 
     private void updateTextView() {
@@ -396,8 +443,8 @@ public class main extends AppCompatActivity implements
         if(t != null) {
             t.interrupt();
         }
-        timer.setText("00:00");
-        statusTV.setText("Recording stopped");
+        timer.setText(R.string.timeTV);
+        statusTV.setText(R.string.text_recording_stopped);
     }
 
 
@@ -544,7 +591,7 @@ public class main extends AppCompatActivity implements
         sendBroadcast(new Intent("elcarecorder.pause"));
         paused = true;
         t.interrupt();
-        statusTV.setText("Recording paused");
+        statusTV.setText(R.string.text_recording_paused);
     }
 
     public void continuerecording() {
@@ -575,7 +622,7 @@ public class main extends AppCompatActivity implements
         };
 
         t.start();
-        statusTV.setText("Recording started");
+        statusTV.setText(R.string.text_recording_started);
     }
 
     private void setLayoutColors() {
@@ -606,6 +653,7 @@ public class main extends AppCompatActivity implements
         } else {
             frequency = pref.getInt(getString(R.string.frequency), 44100);
             recordingMode = pref.getInt(getString(R.string.mode), 2);
+            recordingid = pref.getInt(getString(R.string.lastclipid), 0);
             holdToRecord = pref.getBoolean(getString(R.string.pref_holdToRecord), false);
             color_primary = pref.getInt("color_primary",getResources().getColor(R.color.primary));
             color_primary_dark = pref.getInt("color_primary_dark",getResources().getColor(R.color.primary_dark));
@@ -1079,7 +1127,7 @@ public class main extends AppCompatActivity implements
                 sessionid = -1;
             }
         });
-        Snackbar bar = Snackbar.make(parent_view, "Playing recording", Snackbar.LENGTH_SHORT);
+        Snackbar bar = Snackbar.make(parent_view, R.string.text_playback_started, Snackbar.LENGTH_SHORT);
         bar.show();
     }
 
@@ -1197,7 +1245,7 @@ public class main extends AppCompatActivity implements
             } else {
                 stopPlaying();
                 sessionid = -1;
-                showSnack("Audio stopped", true);
+                showSnack(getString(R.string.text_playback_stopped), true);
             }
         }
     }
@@ -1504,7 +1552,7 @@ public class main extends AppCompatActivity implements
 
     private AlertDialog QualitySettings() {
         AlertDialog.Builder builder = new AlertDialog.Builder(main.this, R.style.Theme_AppCompat_Light_Dialog_Alert);
-        builder.setTitle("Quality Settings");
+        builder.setTitle(getString(R.string.title_quality_settings));
         final View view = LayoutInflater.from(main.this).inflate(R.layout.qualitysettings, null);
         builder.setView(view);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(main.this, R.array.frequency_array, android.R.layout.simple_spinner_item);
@@ -1521,13 +1569,23 @@ public class main extends AppCompatActivity implements
             spinner.setSelection(1);
         } else spinner.setSelection(0);
         spinner.setOnItemSelectedListener(spinner_item_listener);
-        builder.setNegativeButton("CLOSE", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(getString(R.string.button_quality_settings_close), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
             }
         });
         return builder.create();
+    }
+
+
+
+    private void showFeedbackDialog() {
+        AlertDialog dialog = new AlertDialog.Builder(main.this, R.style.Theme_AppCompat_Light_Dialog_Alert)
+                .setPositiveButton("OKAY", null)
+                .create();
+        dialog.setMessage("Hey! If you plan on uninstalling or have suggestions, please let us know why or what they are using the Feedback option in the menu :)");
+        dialog.show();
     }
 
     public void stopButtonPress() {
@@ -1583,6 +1641,40 @@ public class main extends AppCompatActivity implements
         log("STOPbtn pressed");
         if (holdToRecord) {
             setButtons();
+        }
+    }
+
+
+    @TargetApi(Build.VERSION_CODES.M)
+    public void checkApplicationPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            List<String> list = new ArrayList<String>();
+            int perms = -1;
+            if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                //requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                //permissions[++perms] =
+                list.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+            }
+            if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                //requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
+                list.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            }
+            if(checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                //requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, 3);
+                list.add(Manifest.permission.RECORD_AUDIO);
+            }
+            if(list.size() > 0) {
+                String[] permissions = list.toArray(new String[list.size()]);
+                requestPermissions(permissions, 1);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(recordingid == 0) {
+            showFeedbackDialog();
         }
     }
 }
