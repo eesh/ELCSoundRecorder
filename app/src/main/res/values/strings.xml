@@ -30,6 +30,32 @@
     <string name="button_quality_settings_close">CLOSE</string>
     <string name="text_feedback_prompt">Hey! If you plan on uninstalling or have suggestions, please let us know why or what they are using the Feedback option in the menu :)</string>
 
+    <string name="text_cancel">CANCEL</string>
+
+    <string name="text_pick_colour_title">Pick a colour</string>
+    <string-array name="colors">
+        <item>Red</item>
+        <item>Pink</item>
+        <item>Orange</item>
+        <item>Yellow</item>
+        <item>Blue</item>
+        <item>Light Blue</item>
+        <item>Teal</item>
+        <item>Cyan</item>
+        <item>Green</item>
+        <item>Light Green</item>
+        <item>Lime</item>
+        <item>Purple</item>
+        <item>Deep Purple</item>
+        <item>Amber</item>
+        <item>Grey</item>
+        <item>Blue Grey</item>
+        <item>AMOLED</item>
+    </string-array>
+
+    <string name="text_delete_confirm">Delete recording?</string>
+    <string name="text_delete_caps">DELETE</string>
+
     <!-- Do not edit these lines -->
     <string name="dhTV">Folders</string>
     <string name="timeTV">00:00</string>

@@ -299,20 +299,20 @@ public class main extends AppCompatActivity implements
                 }
                 prepareDelete(position, file);
                 AlertDialog deleteAlert = new AlertDialog.Builder(main.this, R.style.Theme_AppCompat_Light_Dialog_Alert)
-                        .setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(R.string.text_delete_caps, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 deleteRecording();
                             }
                         })
-                        .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                        .setNegativeButton(R.string.text_cancel, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 resetDelete();
                             }
                         })
                         .create();
-                deleteAlert.setMessage("Delete recording?");
+                deleteAlert.setMessage(getString(R.string.text_delete_confirm));
                 deleteAlert.show();
                 return true;
             }
