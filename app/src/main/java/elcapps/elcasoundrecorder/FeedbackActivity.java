@@ -39,6 +39,10 @@ public class FeedbackActivity extends AppCompatActivity implements FloatingActio
     @Override
     public void onClick(View view) {
         final String feedback = textbox.getText().toString();
+        if(feedback.length() <= 2 || feedback.length() > 256) {
+            Toast.makeText(getApplicationContext(),"Please describe in a sentence not longer than 256 characters", Toast.LENGTH_LONG).show();
+            return;
+        }
         view.setEnabled(false);
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         StringRequest request = new StringRequest(Request.Method.POST, "http://filtershots.com/SoundRecorder/feedback.php",
