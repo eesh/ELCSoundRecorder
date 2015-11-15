@@ -8,8 +8,8 @@ android {
         applicationId "elcapps.elcasoundrecorder"
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 40
-        versionName "5.2"
+        versionCode 41
+        versionName "5.3"
     }
 
     buildTypes {

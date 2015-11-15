@@ -1675,6 +1675,17 @@ public class main extends AppCompatActivity implements
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(recordingid == 0) {
             showFeedbackDialog();
+            File fDir = new File(mFileName);
+            if(!fDir.exists()) {
+                try {
+                    fDir.mkdirs();
+                    File nomedia = new File(fDir.getAbsolutePath()+"/.nomedia");
+                    nomedia.createNewFile();
+                    loadFiles(1);
+                } catch (Exception e){
+                    log(e.toString());
+                }
+            }
         }
     }
 }

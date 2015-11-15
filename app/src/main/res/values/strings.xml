@@ -23,7 +23,7 @@
     <string name="text_recording_started">Recording started</string>
     <string name="text_recording_stopped">Recording stopped</string>
     <string name="text_recording_paused">Recording paused</string>
-    <string name="text_playback_started">Playback stared</string>
+    <string name="text_playback_started">Playback started</string>
     <string name="text_playback_stopped">Playback stopped</string>
     <string name="title_quality_settings">Quality Settings</string>
 
