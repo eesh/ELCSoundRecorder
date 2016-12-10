@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "965026245046",
+    "firebase_url": "https://sound-recorder-by-elc.firebaseio.com",
+    "project_id": "sound-recorder-by-elc",
+    "storage_bucket": "sound-recorder-by-elc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:965026245046:android:a5c8e05aa8d6840d",
+        "android_client_info": {
+          "package_name": "elcapps.elcasoundrecorder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "965026245046-l53r4tblbf3jblmmcb12qhdggcmv5m0d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAO-37bhvRQPiGGCIfJM2qpZ57zpUuhfK8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

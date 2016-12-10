@@ -38,62 +38,66 @@
                     android:animateLayoutChanges="true"
                     android:id="@+id/relativeLayout">
 
-                    <LinearLayout
-                        android:orientation="vertical"
+                    <android.support.design.widget.CoordinatorLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/bglayout"
-                        android:background="@color/primary"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:visibility="visible">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/timeTV"
-                            android:id="@+id/timeTV"
-                            android:layout_gravity="center"
-                            android:textColor="#FFF"
-                            android:textSize="56sp"
-                            android:fontFamily="sans-serif-light"
-                            android:textStyle="normal" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/statusTV"
-                            android:id="@+id/statusTV"
-                            android:textStyle="bold|normal"
-                            android:textSize="16sp"
-                            android:textColor="#FFF"
-                            android:layout_gravity="center_horizontal" />
-
+                        android:id="@+id/cbg_layout">
                         <LinearLayout
+                            android:orientation="vertical"
                             android:layout_width="match_parent"
-                            android:layout_height="48dp"
-                            android:orientation="horizontal"
-                            android:background="@color/transparent"
-                            android:layout_marginTop="8dp">
-                            <ImageButton
+                            android:layout_height="wrap_content"
+                            android:id="@+id/bglayout"
+                            android:background="@color/primary"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:visibility="visible">
+
+                            <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/folder"
-                                android:layout_gravity="left|center_vertical"
-                                android:layout_weight="1"
-                                android:src="@drawable/ic_folder_white_24dp"
-                                android:background="@color/transparent" />
-                            <ImageButton
+                                android:text="@string/timeTV"
+                                android:id="@+id/timeTV"
+                                android:layout_gravity="center"
+                                android:textColor="#FFF"
+                                android:textSize="56sp"
+                                android:fontFamily="sans-serif-light"
+                                android:textStyle="normal" />
+
+                            <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/palette"
-                                android:layout_gravity="right|center_vertical"
-                                android:layout_weight="1"
-                                android:src="@drawable/ic_palette_white_24dp"
-                                android:background="@color/transparent"/>
+                                android:text="@string/statusTV"
+                                android:id="@+id/statusTV"
+                                android:textStyle="bold|normal"
+                                android:textSize="16sp"
+                                android:textColor="#FFF"
+                                android:layout_gravity="center_horizontal" />
+
+                            <FrameLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="48dp"
+                                android:id="@+id/visualizerView"
+                                android:background="@color/transparent"
+                                android:layout_marginTop="8dp"
+                                android:gravity="center"
+                                android:layout_gravity="center_horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="?android:attr/textAppearanceLarge"
+                                    android:id="@+id/visualizerTV"
+                                    android:layout_gravity="center"
+                                    android:textColor="@color/white"
+                                    android:textStyle="bold"
+                                    android:typeface="monospace"
+                                    android:singleLine="true" />
+
+                            </FrameLayout>
+
                         </LinearLayout>
-                    </LinearLayout>
+                    </android.support.design.widget.CoordinatorLayout>
 
                     <elcapps.elcasoundrecorder.FixedRecyclerView
                         android:layout_width="match_parent"
@@ -101,12 +105,13 @@
                         android:visibility="visible"
                         android:scrollbars="vertical"
                         android:id="@+id/recycler_view"
-                        android:layout_below="@+id/bglayout"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentBottom="true"
                         android:background="@color/cardview_light_background"
-                        tools:listitem="@android:layout/simple_list_item_1"/>
+                        tools:listitem="@android:layout/simple_list_item_1"
+                        android:paddingTop="8dp"
+                        android:layout_below="@+id/shadow_view" />
 
 
                     <View
@@ -115,7 +120,7 @@
                         android:id="@+id/shadow_view"
                         android:background="@drawable/shadow"
                         android:visibility="visible"
-                        android:layout_below="@+id/bglayout"/>
+                        android:layout_below="@+id/cbg_layout"/>
 
                 </RelativeLayout>
 
@@ -160,12 +165,13 @@
         android:id="@+id/recbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_mic_white_24dp"
-        android:layout_gravity="end|bottom"
         android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_mic_white_24dp"
         app:borderWidth="0dp"
         android:visibility="visible"
-        app:elevation="6dp"
-        app:backgroundTint="@color/accent"/>
+        app:elevation="8dp"
+        app:backgroundTint="@color/red_A200"
+        app:layout_anchor="@id/bglayout"
+        app:layout_anchorGravity="bottom|center_horizontal"/>
+
 </android.support.design.widget.CoordinatorLayout>

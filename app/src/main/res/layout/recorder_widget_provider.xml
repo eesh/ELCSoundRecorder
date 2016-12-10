@@ -3,12 +3,13 @@
     android:padding="@dimen/widget_margin" android:background="@color/transparent">
 
     <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:id="@+id/button_Record"
         android:src="@drawable/ic_launcher"
-        android:layout_centerInParent="true"
         android:background="@color/transparent"
         android:scaleType="fitCenter"
-        android:contentDescription="button to record" />
+        android:contentDescription="button to record"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true" />
 </RelativeLayout>

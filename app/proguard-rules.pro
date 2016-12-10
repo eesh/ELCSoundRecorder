@@ -31,3 +31,8 @@
 -keepnames class * implements android.os.Parcelable {
     public static final ** CREATOR;
 }
+
+-dontwarn com.rey.material.widget.**
+-dontwarn com.rey.material.app.**
+
+-printmapping build/outputs/mapping/release/mapping.txt

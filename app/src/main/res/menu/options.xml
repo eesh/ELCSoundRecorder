@@ -1,9 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/menuitem_holdToRecord"
+        android:checkable="true"
+        android:checked="false"
         android:title="@string/menuitem_holdToRecord" />
+    <item android:id="@+id/menuitem_palette"
+        android:title="@string/menuitem_palette" />
+    <item android:id="@+id/menuitem_folder"
+        android:title="@string/menuitem_folder" />
     <item android:id="@+id/menuitem_qualitySettings"
         android:title="@string/menuitem_qualitySettings" />
     <item android:id="@+id/menuitem_feedback"
         android:title="@string/text_feedback" />
+    <item android:id="@+id/menuitem_delete"
+        android:title="@string/delete_menu_string"
+        android:icon="@drawable/ic_delete_black_24dp"
+        android:tint="@color/grey_300"
+        android:visible="true"
+        app:showAsAction="always" />
 </menu>

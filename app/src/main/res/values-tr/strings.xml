@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="rename_menu_string">Yeniden adlandır</string>
+    <string name="dialog_title">Dosyayı yeniden adlandır</string>
+    <string name="dialog_boxname">İsim</string>
+    <string name="delete_menu_string">Sil</string>
+    <string name="notify_recording_deleted">Kayıt silindi</string>
+    <string name="share_menu_string">Paylaş</string>
+
+    <string name="menuitem_holdToRecord">Basılı tutarak kaydet</string>
+    <string name="menuitem_palette">Palet</string>
+    <string name="menuitem_folder">Klasör</string>
+    <string name="menuitem_qualitySettings">Kalite seçenekleri</string>
+    <string name="textview_stop">Durdur</string>
+
+
+    <string name="title_activity_feedback">GeribildirimAktivitesi</string>
+    <string name="text_feedback">Geri bildirim</string>
+    <string name="text_feedback_detail">Sevdiğiniz ve hoşunuza gitmeyen yerleri ya da neden bu uygulamayı kaldırabileceğinizi bize söyleyin. Böylece daha iyisini yapabiliriz</string>
+    <string name="text_feedback_hint">Buraya yazınız</string>
+
+    <string name="notification_content_text">Kaydı durdurmak için dokunun</string>
+
+    <string name="text_recording_started">Kayıt başladı</string>
+    <string name="text_recording_stopped">Kayıt durdu</string>
+    <string name="text_recording_paused">Kayıt duraklatıldı</string>
+    <string name="text_playback_started">Oynatma başlatıldı</string>
+    <string name="text_playback_stopped">Oynatma durduruldu</string>
+    <string name="title_quality_settings">Kalite Seçenekleri</string>
+
+    <string name="button_quality_settings_close">KAPAT</string>
+    <string name="text_feedback_prompt">Hey! Eğer uygulamayı kaldırmak gibi bir planın veya bir önerin varsa, menüdeki Geri Bildirim bölümünden nedenini veya önerini söyleyebilirsin :)</string>
+
+    <string name="text_cancel">İPTAL</string>
+    <string name="text_pick_colour_title">Bir renk seç</string>
+    <string-array name="colors">
+        <item>Kırmızı</item>
+        <item>Pembe</item>
+        <item>Turuncu</item>
+        <item>Sarı</item>
+        <item>Mavi</item>
+        <item>Açık Mavi</item>
+        <item>Turkuaz</item>
+        <item>Camgöbeği</item>
+        <item>Yeşil</item>
+        <item>Açık Yeşil</item>
+        <item>Kireç</item>
+        <item>Mor</item>
+        <item>Koyu Mor</item>
+        <item>Kehribar</item>
+        <item>Gri</item>
+        <item>Mavi Gri</item>
+        <item>AMOLED</item>
+    </string-array>
+
+
+
+    <string name="text_delete_confirm">Kaydı silmek istediğinizden emin misiniz?</string>
+    <string name="text_delete_caps">SİL</string>
+    <string name="pause_fail_prompt">Pause not available in AAC format</string>
+    <string name="text_multiple_delete">Delete recordings?</string>
+
+    <!-- Do not edit these lines -->
+    <string name="dhTV">Folders</string>
+    <string name="timeTV">00:00</string>
+    <string name="statusTV">Kayıt edilmiyor</string>
+    <string name="app_name">Sound Recorder</string>
+    <string name="lastclipid">1</string>
+    <string name="mode">Recording mode</string>
+    <string name="activitystatus">activityrunning</string>
+    <string name="frequency">frequency</string>
+    <string name="pref_format">format</string>
+    <string name="pref_holdToRecord">holdToRecord</string>
+    <string name="folderPath">folderPath</string>
+    <string name="appwidget_text">Record</string>
+    <string name="add_widget">Add widget</string>
+
+
+</resources>

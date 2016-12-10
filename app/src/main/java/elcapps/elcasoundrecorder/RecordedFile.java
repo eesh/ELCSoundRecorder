@@ -31,7 +31,12 @@ public class RecordedFile {
         } else {
             this.date = d;
         }
-        long dur = Long.parseLong(dura);
+        long dur;
+        if(dura == null) {
+            dur = 0;
+        } else {
+            dur = Long.parseLong(dura);
+        }
         String seconds = String.valueOf((dur % 60000) / 1000);
         String minutes = String.valueOf(dur / 60000);
         if (seconds.length() == 1) {
