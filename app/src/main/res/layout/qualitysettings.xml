@@ -7,16 +7,17 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginRight="16dp">
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Frequency :"
+            android:text="Sampling rate:"
             android:id="@+id/textview_frequency"
-            android:textSize="14sp" />
+            android:textSize="16sp"
+            android:layout_weight="1" />
 
         <Spinner
             android:layout_width="wrap_content"
@@ -29,22 +30,25 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="8dp">
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Audio format:"
-            android:id="@+id/textview_format" />
+            android:id="@+id/textview_format"
+            android:textSize="16sp"
+            android:layout_weight="1" />
 
         <Spinner
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/spinner_format"
-            android:spinnerMode="dropdown" />
+            android:spinnerMode="dropdown"
+            android:gravity="right" />
     </LinearLayout>
 
 </LinearLayout>

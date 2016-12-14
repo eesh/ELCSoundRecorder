@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+<string name="rename_menu_string">Rename</string>
+<string name="dialog_title">Rename file</string>
+<string name="dialog_boxname">Name</string>
+<string name="delete_menu_string">Delete</string>
+<string name="notify_recording_deleted">Recording deleted</string>
+<string name="share_menu_string">Share</string>
+
+<string name="menuitem_holdToRecord">Hold to record</string>
+<string name="menuitem_qualitySettings">Quality settings</string>
+<string name="textview_stop">Stop</string>
+
+
+<string name="title_activity_feedback">FeedbackActivity</string>
+<string name="text_feedback">Feedback</string>
+<string name="text_feedback_detail">Tell us what you liked and disliked or why you may be uninstalling the application so we can make it better</string>
+<string name="text_feedback_hint">Type here</string>
+
+<string name="notification_content_text">Tap to stop recording</string>
+
+<string name="text_recording_started">Recording started</string>
+<string name="text_recording_stopped">Recording stopped</string>
+<string name="text_recording_paused">Recording paused</string>
+<string name="text_playback_started">Playback started</string>
+<string name="text_playback_stopped">Playback stopped</string>
+<string name="title_quality_settings">Quality Settings</string>
+
+<string name="button_quality_settings_close">CLOSE</string>
+<string name="text_feedback_prompt">Hey! If you plan on uninstalling or have suggestions, please let us know why or what they are using the Feedback option in the menu :)</string>
+
+<string name="text_cancel">CANCEL</string>
+
+<string name="text_pick_colour_title">Pick a colour</string>
+<string-array name="colors">
+    <item>Red</item>
+    <item>Pink</item>
+    <item>Orange</item>
+    <item>Yellow</item>
+    <item>Blue</item>
+    <item>Light Blue</item>
+    <item>Teal</item>
+    <item>Cyan</item>
+    <item>Green</item>
+    <item>Light Green</item>
+    <item>Lime</item>
+    <item>Purple</item>
+    <item>Deep Purple</item>
+    <item>Amber</item>
+    <item>Grey</item>
+    <item>Blue Grey</item>
+    <item>AMOLED</item>
+</string-array>
+
+<string name="text_delete_confirm">Delete recording?</string>
+<string name="text_delete_caps">DELETE</string>
+<string name="pause_fail_prompt">Pause not available in AAC format</string>
+<string name="text_multiple_delete">Delete recordings?</string>
+
+<!-- Do not edit these lines -->
+<string name="dhTV">Folders</string>
+<string name="timeTV">00:00</string>
+<string name="statusTV">Not Recording</string>
+<string name="app_name">Sound Recorder for Wear</string>
+<string name="text_tap_record">Tap to record</string>
+<string name="text_tap_stop">Tap to stop recording</string>
+<string name="lastclipid">1</string>
+<string name="mode">Recording mode</string>
+<string name="activitystatus">activityrunning</string>
+<string name="frequency">frequency</string>
+<string name="pref_format">format</string>
+<string name="pref_holdToRecord">holdToRecord</string>
+<string name="folderPath">folderPath</string>
+<string name="appwidget_text">Record</string>
+<string name="add_widget">Add widget</string>
+    <string name="text_browse_files">Browse files</string>
+
+
+</resources>

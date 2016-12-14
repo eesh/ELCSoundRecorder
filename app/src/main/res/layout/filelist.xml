@@ -14,7 +14,7 @@
             android:layout_marginLeft="16dp"
             android:text="@string/textview_stop"
             android:layout_centerVertical="true"
-            android:visibility="gone"
+            android:visibility="visible"
             android:textStyle="bold|normal"
             android:textSize="14sp" />
 
@@ -33,7 +33,7 @@
             app:sl_primaryColor="@color/accent"
             android:layout_centerVertical="true"
             android:id="@+id/slider"
-            android:visibility="gone"
+            android:visibility="visible"
             android:layout_toRightOf="@+id/stop_playback"
             android:layout_toLeftOf="@+id/textView_timer"
             android:layout_toStartOf="@+id/textView_timer" />
@@ -50,7 +50,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -70,7 +70,7 @@
             android:lines="1"
             android:singleLine="true"
             android:ellipsize="none"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -90,7 +90,7 @@
             android:paddingRight="16dp"
             android:layout_below="@+id/lLVTV"
             android:layout_marginTop="8dp"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -106,14 +106,14 @@
             android:textStyle="normal"
             android:layout_marginTop="8dp"
             android:paddingRight="16dp"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textView_timer"
             android:text="00:00"
-            android:visibility="gone"
+            android:visibility="visible"
             android:textStyle="bold|normal"
             android:textSize="14sp"
             android:layout_centerVertical="true"

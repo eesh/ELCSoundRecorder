@@ -45,7 +45,7 @@ public class FeedbackActivity extends AppCompatActivity implements FloatingActio
         }
         view.setEnabled(false);
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-        StringRequest request = new StringRequest(Request.Method.POST, "http://filtershots.com/SoundRecorder/feedback.php",
+        StringRequest request = new StringRequest(Request.Method.POST, "http://filtershots.com/SoundRecorder/feedback",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

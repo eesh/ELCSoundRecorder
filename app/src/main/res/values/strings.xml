@@ -8,8 +8,11 @@
     <string name="notify_recording_deleted">Recording deleted</string>
     <string name="share_menu_string">Share</string>
 
+
     <string name="menuitem_holdToRecord">Hold to record</string>
     <string name="menuitem_qualitySettings">Quality settings</string>
+    <string name="menuitem_palette">Palette</string>
+    <string name="menuitem_folder">Folder</string>
     <string name="textview_stop">Stop</string>
 
 
@@ -18,7 +21,7 @@
     <string name="text_feedback_detail">Tell us what you liked and disliked or why you may be uninstalling the application so we can make it better</string>
     <string name="text_feedback_hint">Type here</string>
 
-    <string name="notification_content_text">Tap to stop recording</string>
+    <string name="notification_content_text">Tap to open app. Expand for options</string>
 
     <string name="text_recording_started">Recording started</string>
     <string name="text_recording_stopped">Recording stopped</string>
@@ -55,6 +58,8 @@
 
     <string name="text_delete_confirm">Delete recording?</string>
     <string name="text_delete_caps">DELETE</string>
+    <string name="pause_fail_prompt">Pause not available in AAC format</string>
+    <string name="text_multiple_delete">Delete recordings?</string>
 
     <!-- Do not edit these lines -->
     <string name="dhTV">Folders</string>

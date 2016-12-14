@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ElcaSoundRecorder.iml" filepath="$PROJECT_DIR$/ElcaSoundRecorder.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/soundrecorderforwear/soundrecorderforwear.iml" filepath="$PROJECT_DIR$/soundrecorderforwear/soundrecorderforwear.iml" />
     </modules>
   </component>
 </project>

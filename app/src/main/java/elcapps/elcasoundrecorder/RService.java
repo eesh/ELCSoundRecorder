@@ -12,8 +12,14 @@ import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Environment;
 import android.os.FileObserver;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.util.Log;
+
+import com.google.firebase.crash.FirebaseCrash;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -44,6 +50,10 @@ public class RService extends Service {
     private int recordingMode;
     private int fileNumber;
     private MediaRecorder mediaRecorder;
+    private Messenger messenger = null;
+    private long ticktock=0;
+    private int visualizerValue;
+    private Runnable recordingRunnable;
 
     public RService() {
         mediaRecorder = null;
@@ -71,6 +81,7 @@ public class RService extends Service {
         recorderParameters();
         loadPreferenceData();
         startRecording();
+        messenger = intent.getParcelableExtra("messenger");
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -114,8 +125,39 @@ public class RService extends Service {
                 mediaRecorder.prepare();
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (IllegalStateException e) {
+                FirebaseCrash.report(new Throwable(e+" "+SAMPLE_RATE));
+                mediaRecorder.release();
+                mediaRecorder = new MediaRecorder();
+                mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+                mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+                if(Build.VERSION.SDK_INT >= 16) {
+                    mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.HE_AAC);
+                } else {
+                    mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+                }
+                mediaRecorder.setOutputFile(fileName);
+                mediaRecorder.setAudioSamplingRate(SAMPLE_RATE);
+                mediaRecorder.setAudioEncodingBitRate(96000);
+                try {
+                    mediaRecorder.prepare();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
             }
             mediaRecorder.start();
+            final Handler handler = new Handler();
+            recordingRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    if(mediaRecorder != null) {
+                        long value = mediaRecorder.getMaxAmplitude()/650;
+                        sendData(value);
+                        handler.postDelayed(this, 150);
+                    }
+                }
+            };
+            handler.postDelayed(recordingRunnable, 150);
             log("mediaRecorder recording");
         }
     }
@@ -129,6 +171,9 @@ public class RService extends Service {
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(fileName, true);
+            if(fos == null) {
+                FirebaseCrash.report(new Exception("FileOutputStream null: "+fileName));
+            }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -145,6 +190,7 @@ public class RService extends Service {
             WriteWaveFileHeader(fos, totalAudioLen, totalDataLen,
                     longSampleRate, channels, byteRate);
         } catch (IOException e) {
+
             e.printStackTrace();
         }
 
@@ -162,14 +208,28 @@ public class RService extends Service {
                             temp = (long) sData[i];
                         }
                         if (temp > 32767) { temp = 32767;}
-                        if (temp <- 32768) { temp = -32768;}
+                        if (temp < -32768) { temp = -32768;}
                         sData[i] = (byte)temp;
                     }
-                    assert os != null;
-                    os.write(sData, 0, result);
+                    if(os != null) {
+                        os.write(sData, 0, result);
+                        if(messenger != null) {
+                            int value = 0;
+                            long data = (long) sData[result-1];
+                            sendData(data);
+                        }
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (NullPointerException ee) {
+                try {
+                    fos = new FileOutputStream(fileName, true);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    break;
+                }
+                os = new BufferedOutputStream(fos);
             }
         }
 
@@ -195,6 +255,43 @@ public class RService extends Service {
             stopSelf();
         }
 
+    }
+
+    private void sendData(long data) {
+
+        long currentTime = System.currentTimeMillis();
+        long diff = currentTime - ticktock;
+        if(diff > 150){
+
+
+            ticktock = currentTime;
+
+            int value = 0;
+            if (data < 0)
+                data *= -1;
+            if (data < 5)
+                value = 0;
+            else if (data >= 5 && data < 10)
+                value = 1;
+            else if (data >= 10 && data < 20)
+                value = 2;
+            else if (data >= 30 && data < 40)
+                value = 3;
+            else if (data >= 40 && data < 50)
+                value = 4;
+            else value = 5;
+
+            if(visualizerValue > value) {
+                visualizerValue--;
+            } else visualizerValue = value;
+        }
+        Message msg = new Message();
+        msg.arg1 = visualizerValue;
+        try {
+            messenger.send(msg);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -312,7 +409,7 @@ public class RService extends Service {
             long totalDataLen, long longSampleRate, int channels,
             long byteRate) throws IOException {
 
-        log("Writing wav header: " + out.getFD().toString());
+        log("Writing wav header: " + fileName);
         byte[] header = new byte[44];
 
         header[0] = 'R';  // RIFF/WAVE header
@@ -367,7 +464,7 @@ public class RService extends Service {
             long totalDataLen, long longSampleRate, int channels,
             long byteRate) throws IOException {
 
-        log("Writing wav header: " + out.getFD().toString());
+        log("Writing wav header: " + fileName);
         byte[] header = new byte[44];
 
         header[0] = 'R';  // RIFF/WAVE header
