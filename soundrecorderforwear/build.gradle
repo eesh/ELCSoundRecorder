@@ -2,22 +2,14 @@ apply plugin: 'com.android.application'
 
 
 android {
-<<<<<<< HEAD
+
     compileSdkVersion 25
     buildToolsVersion "25.0.1"
-=======
-    compileSdkVersion 24
-    buildToolsVersion "23.0.2"
->>>>>>> 1e37d48f9f96f3d012cd06af7f39d2ac83d6ccf9
 
     defaultConfig {
         applicationId "elc.apps.soundrecorderforwear"
         minSdkVersion 21
-<<<<<<< HEAD
         targetSdkVersion 25
-=======
-        targetSdkVersion 24
->>>>>>> 1e37d48f9f96f3d012cd06af7f39d2ac83d6ccf9
         versionCode 1
         versionName "1.0"
     }
@@ -37,9 +29,6 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.google.android.support:wearable:2.0.0-alpha1'
-<<<<<<< HEAD
     compile 'com.google.android.gms:play-services-wearable:10.0.1'
-=======
-    compile 'com.google.android.gms:play-services-wearable:9.0.2'
->>>>>>> 1e37d48f9f96f3d012cd06af7f39d2ac83d6ccf9
+
 }
