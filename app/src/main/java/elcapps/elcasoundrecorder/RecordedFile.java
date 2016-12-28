@@ -4,7 +4,7 @@ public class RecordedFile {
 
     protected String filename = "Recording";
     protected String duration = "00:00";
-    protected String date = "1/1/1";
+    protected String date = "01/01/1970";
     protected String path = "";
     protected String time = "";
     protected boolean selected = false;
